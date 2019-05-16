@@ -30,58 +30,65 @@ namespace ApiOrnek.Controllers
 
         // GET: api/Data/5
         [HttpGet("{id}", Name = "Get")]
-        public Dummy Get(int id)
+        public ActionResult<Dummy> Get(int id)
         {
             var dummy = dummies.FirstOrDefault(x => x.id == id);
             if (dummy == null)
             {
-                return Content(HttpStatusCode.NotFound, "Foo does not exist.");
+                return NotFound();
             }
-               return dummy;
-        }
-
-        private Dummy Content(HttpStatusCode notFound, string v)
-        {
-            throw new NotImplementedException();
+            return Ok(dummy);
         }
 
         // POST: api/Data
         [HttpPost]
-        public void Post([FromBody] Dummy model)
+        public ActionResult<Dummy> Post([FromBody] Dummy model)
         {
-            Dummy _newDummy = new Dummy();
-            model.id = _newDummy.id;
-            model.Name = _newDummy.Name;
-            model.LastName = _newDummy.LastName;
-            model.Age = _newDummy.Age;
+            try
+            {
+                var _newDummy = new Dummy();
+                _newDummy.id = model.id;
+                _newDummy.Name = model.Name;
+                _newDummy.LastName = model.LastName;
+                _newDummy.Age = model.Age;
+                return Ok(model);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
+
         }
 
         // PUT: api/Data/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Dummy model)
+        public ActionResult<Dummy> Put(int id, [FromBody] Dummy model)
         {
             var dummy = dummies.FirstOrDefault(x => x.id == id);
-            if (dummy!=null)
+            if (dummy != null)
             {
                 dummy.Name = model.Name;
                 dummy.LastName = model.LastName;
                 dummy.Age = model.Age;
+                return Ok(dummy);
             }
             else
             {
-                NotFound();
+                return NotFound();
             }
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Dummy> Delete(int id)
         {
             var dummy = dummies.FirstOrDefault(x => x.id == id);
-            if (dummy!=null)
+            if (dummy != null)
             {
-                Delete(id);
+                return Ok(dummy);
             }
+            return NotFound();
         }
     }
 }
