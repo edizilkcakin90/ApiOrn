@@ -7,7 +7,26 @@ namespace ApiOrnek.Data
 {
     public class Data
     {
-        public static readonly List<Dummy> _dummies = new List<Dummy>()
+        private static Data _data;
+
+        public static Data dummies
+        {
+            get
+            {
+                if (_data == null)
+                {
+                    _data = new Data();
+                }
+                return _data;
+            }
+        }
+
+        private Data()
+        {
+
+        }
+
+        public List<Dummy> _dummiesList = new List<Dummy>()
         {
            new Dummy {id =1,Name="Ediz", LastName="Ilkcakin",Age=29},
            new Dummy {id =2,Name="Onur", LastName="Uygur",Age=33},
@@ -15,4 +34,5 @@ namespace ApiOrnek.Data
            new Dummy {id =4,Name="Mehmet", LastName="Dsa",Age=27}
         };
     }
+
 }

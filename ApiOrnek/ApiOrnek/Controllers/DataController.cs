@@ -13,14 +13,16 @@ namespace ApiOrnek.Controllers
     [ApiController]
     public class DataController : ControllerBase
     {
-        private static readonly List<Dummy> _dummies = new List<Dummy>()
-        {
-           new Dummy {id =1,Name="Ediz", LastName="Ilkcakin",Age=29},
-           new Dummy {id =2,Name="Onur", LastName="Uygur",Age=33},
-           new Dummy {id =3,Name="Ahmet", LastName="Asd",Age=30},
-           new Dummy {id =4,Name="Mehmet", LastName="Dsa",Age=27}
-        };
+        //private static readonly List<Dummy> _dummies = new List<Dummy>()
+        //{
+        //   new Dummy {id =1,Name="Ediz", LastName="Ilkcakin",Age=29},
+        //   new Dummy {id =2,Name="Onur", LastName="Uygur",Age=33},
+        //   new Dummy {id =3,Name="Ahmet", LastName="Asd",Age=30},
+        //   new Dummy {id =4,Name="Mehmet", LastName="Dsa",Age=27}
+        //};
 
+        List<Dummy> _dummies =  Data.Data.dummies._dummiesList.ToList();
+        
         // GET: api/Data
         [HttpGet]
         public IEnumerable<Dummy> Get()
@@ -51,6 +53,7 @@ namespace ApiOrnek.Controllers
                 _newDummy.Name = model.Name;
                 _newDummy.LastName = model.LastName;
                 _newDummy.Age = model.Age;
+                _dummies.Add(_newDummy);
                 return Ok(model);
             }
             catch (Exception)
@@ -86,7 +89,8 @@ namespace ApiOrnek.Controllers
             var dummy = _dummies.FirstOrDefault(x => x.id == id);
             if (dummy != null)
             {
-                return Ok(dummy);
+                _dummies.Remove(dummy);
+                return Ok();
             }
             return NotFound();
         }
