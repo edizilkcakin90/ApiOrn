@@ -7,13 +7,12 @@ namespace ApiOrnek.Data
 {
     public class Data
     {
-        public void Add(Dummy model)
+        public static readonly List<Dummy> _dummies = new List<Dummy>()
         {
-            Dummy dum = new Dummy();
-            dum.id = model.id;
-            dum.Name = model.Name;
-            dum.LastName = model.LastName;
-            dum.Age = model.Age;
-        }
+           new Dummy {id =1,Name="Ediz", LastName="Ilkcakin",Age=29},
+           new Dummy {id =2,Name="Onur", LastName="Uygur",Age=33},
+           new Dummy {id =3,Name="Ahmet", LastName="Asd",Age=30},
+           new Dummy {id =4,Name="Mehmet", LastName="Dsa",Age=27}
+        };
     }
 }
