@@ -28,7 +28,7 @@ namespace BLL
         {
             try
             {
-                var dummy = dummies.FirstOrDefault(x => x.ID == model.ID);
+                var dummy = dummies.FirstOrDefault(x => x.ID == id);
                 dummies.Remove(dummy);
                 return true;
             }
