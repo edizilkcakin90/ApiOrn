@@ -56,11 +56,12 @@ namespace BLL
             }
         }
 
-        public bool Update(Dummy model)
+        public bool Update(int id,Dummy model)
         {
-            var dummy = dummies.FirstOrDefault(x => x.ID == model.ID);
+            var dummy = dummies.FirstOrDefault(x => x.ID == id);
             if (dummy != null)
             {
+                dummy.ID = model.ID;
                 dummy.Name = model.Name;
                 dummy.LastName = model.LastName;
                 dummy.Age = model.Age;

@@ -58,7 +58,7 @@ namespace ApiOrnek.Controllers
         [HttpPut("{id}")]
         public ActionResult<Dummy> Put(int id, [FromBody] Dummy model)
         {
-            if (_base.Update(model) == true)
+            if (_base.Update(id,model) == true)
             {
                 return Ok(_base.GetAll().ToList());
             }
