@@ -13,28 +13,20 @@ namespace ApiOrnek.Controllers
     [ApiController]
     public class DataController : ControllerBase
     {
-        //private static readonly List<Dummy> _dummies = new List<Dummy>()
-        //{
-        //   new Dummy {id =1,Name="Ediz", LastName="Ilkcakin",Age=29},
-        //   new Dummy {id =2,Name="Onur", LastName="Uygur",Age=33},
-        //   new Dummy {id =3,Name="Ahmet", LastName="Asd",Age=30},
-        //   new Dummy {id =4,Name="Mehmet", LastName="Dsa",Age=27}
-        //};
-
-        List<Dummy> _dummies =  Data.Data.dummies._dummiesList.ToList();
+        List<Dummy> dummies = Datas.Dummies.dummiesList;
         
         // GET: api/Data
         [HttpGet]
         public IEnumerable<Dummy> Get()
         {
-            return _dummies;
+            return dummies.ToList();
         }
 
         // GET: api/Data/5
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<Dummy> Get(int id)
         {
-            var dummy = _dummies.FirstOrDefault(x => x.id == id);
+            var dummy = dummies.FirstOrDefault(x => x.ID == id);
             if (dummy == null)
             {
                 return NotFound();
@@ -48,37 +40,35 @@ namespace ApiOrnek.Controllers
         {
             try
             {
-                var _newDummy = new Dummy();
-                _newDummy.id = model.id;
-                _newDummy.Name = model.Name;
-                _newDummy.LastName = model.LastName;
-                _newDummy.Age = model.Age;
-                _dummies.Add(_newDummy);
-                return Ok(model);
+                var newDummy = new Dummy();
+                newDummy.ID = model.ID;
+                newDummy.Name = model.Name;
+                newDummy.LastName = model.LastName;
+                newDummy.Age = model.Age;
+                dummies.Add(newDummy);
+                return Ok(dummies.ToList());
             }
             catch (Exception)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-
         }
 
         // PUT: api/Data/5
         [HttpPut("{id}")]
         public ActionResult<Dummy> Put(int id, [FromBody] Dummy model)
         {
-            var dummy = _dummies.FirstOrDefault(x => x.id == id);
+            var dummy = dummies.FirstOrDefault(x => x.ID == id);
             if (dummy != null)
             {
                 dummy.Name = model.Name;
                 dummy.LastName = model.LastName;
                 dummy.Age = model.Age;
-                return Ok(dummy);
+                return Ok(dummies.ToList());
             }
             else
             {
-                return NotFound();
+                return BadRequest();
             }
         }
 
@@ -86,11 +76,11 @@ namespace ApiOrnek.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Dummy> Delete(int id)
         {
-            var dummy = _dummies.FirstOrDefault(x => x.id == id);
+            var dummy = dummies.FirstOrDefault(x => x.ID == id);
             if (dummy != null)
             {
-                _dummies.Remove(dummy);
-                return Ok();
+                dummies.Remove(dummy);
+                return Ok(dummies.ToList());
             }
             return NotFound();
         }
