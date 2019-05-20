@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using ApiOrnek.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DLL;
+using BLL;
 
 namespace ApiOrnek.Controllers
 {
@@ -13,20 +14,25 @@ namespace ApiOrnek.Controllers
     [ApiController]
     public class DataController : ControllerBase
     {
-        List<Dummy> dummies = Datas.Dummies.dummiesList;
+        Base _base;
+        public DataController()
+        {
+            _base = new Base();
+        }
         
         // GET: api/Data
         [HttpGet]
         public IEnumerable<Dummy> Get()
         {
-            return dummies.ToList();
+            return _base.GetAll();
         }
 
         // GET: api/Data/5
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<Dummy> Get(int id)
         {
-            var dummy = dummies.FirstOrDefault(x => x.ID == id);
+
+            var dummy = _base.GetByID(id);
             if (dummy == null)
             {
                 return NotFound();
@@ -38,17 +44,11 @@ namespace ApiOrnek.Controllers
         [HttpPost]
         public ActionResult<Dummy> Post([FromBody] Dummy model)
         {
-            try
+            if (_base.Add(model) == true)
             {
-                var newDummy = new Dummy();
-                newDummy.ID = model.ID;
-                newDummy.Name = model.Name;
-                newDummy.LastName = model.LastName;
-                newDummy.Age = model.Age;
-                dummies.Add(newDummy);
-                return Ok(dummies.ToList());
+                return Ok(_base.GetAll().ToList());
             }
-            catch (Exception)
+            else
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -58,13 +58,9 @@ namespace ApiOrnek.Controllers
         [HttpPut("{id}")]
         public ActionResult<Dummy> Put(int id, [FromBody] Dummy model)
         {
-            var dummy = dummies.FirstOrDefault(x => x.ID == id);
-            if (dummy != null)
+            if (_base.Update(model) == true)
             {
-                dummy.Name = model.Name;
-                dummy.LastName = model.LastName;
-                dummy.Age = model.Age;
-                return Ok(dummies.ToList());
+                return Ok(_base.GetAll().ToList());
             }
             else
             {
@@ -76,11 +72,9 @@ namespace ApiOrnek.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Dummy> Delete(int id)
         {
-            var dummy = dummies.FirstOrDefault(x => x.ID == id);
-            if (dummy != null)
+            if (_base.Delete(id))
             {
-                dummies.Remove(dummy);
-                return Ok(dummies.ToList());
+                return Ok(_base.GetAll());
             }
             return NotFound();
         }
