@@ -4,9 +4,9 @@ using System.Text;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 
-namespace DLL
+namespace DAL
 {
-    public class Dummy
+    public class User
     {
         [Required]
         public int ID { get; set; }
@@ -15,5 +15,8 @@ namespace DLL
         [Required]
         public string LastName { get; set; }
         public short Age { get; set; }
+        public string Email { get; set; }
+        public string IdentityNo { get; set; }
+        public char Sex { get; set; }
     }
 }
