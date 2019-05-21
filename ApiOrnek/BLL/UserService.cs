@@ -1,29 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using DAL;
-using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
+using Core;
 
 namespace BLL
 {
     public class UserService : IUserService
     {
         List<User> users = Datas.Users.userList;
-        public bool Add(User model)
+        public void ChangePassword(ChangePasswordModel model)
+        {
+            //doldur
+        }
+
+        public void ForgotPassword(int id,string email)
+        {
+            
+            var forgotUser = users.FirstOrDefault(x => x.Email == email);
+            MailMessage message = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+            message.To.Add(forgotUser.Email.ToString());
+            message.Subject = "Password Recovery";
+            message.From = new System.Net.Mail.MailAddress("ediz.ilkcakin@gmail.com");
+            message.Body = "Your Password is :" + forgotUser.Password;
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = "smtp.gmail.com";
+
+            SmtpServer.Port = 587;
+            SmtpServer.Credentials = new System.Net.NetworkCredential("username", "password");
+            SmtpServer.EnableSsl = true;
+
+            smtp.Send(message);
+        }
+
+        public bool RegisterUser(RegisterModel model)
         {
             try
             {
-                var newUser = new User();
-                newUser.ID = model.ID;
-                newUser.Name = model.Name;
-                newUser.LastName = model.LastName;
-                newUser.Age = model.Age;
-                newUser.Email = model.Email;
-                newUser.IdentityNo = model.IdentityNo;
-                newUser.Sex= model.Sex;
-                users.Add(newUser);
-                return true;
+                var user = users.Where(x => x.ID == model.ID);
+                if (user != model)
+                {
+                    var newUser = new User();
+                    newUser.ID = model.ID;
+                    newUser.Name = model.Name;
+                    newUser.LastName = model.LastName;
+                    newUser.Age = model.Age;
+                    newUser.Email = model.Email;
+                    newUser.IdentityNo = model.IdentityNo;
+                    newUser.Sex = model.Sex;
+                    newUser.Password = model.Password;
+                    users.Add(newUser);
+                    return true;
+                }
+                return false;
             }
             catch (Exception)
             {
@@ -31,48 +61,11 @@ namespace BLL
             }
         }
 
-        public bool Delete(int id)
+        public bool ValidateCredentials(string email, string password)
         {
-            try
-            {
-                var user = users.FirstOrDefault(x => x.ID == id);
-                users.Remove(user);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public List<User> GetAll()
-        {
-            return users;
-        }
-
-        public User GetByID(int id)
-        {
-            var user = users.FirstOrDefault(x => x.ID == id);
-            return user;
-        }
-
-        public bool Update(int id,User model)
-        {
-            var user = users.FirstOrDefault(x => x.ID == id);
-            if (user != null)
-            {
-                user.ID = model.ID;
-                user.Name = model.Name;
-                user.LastName = model.LastName;
-                user.Age = model.Age;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            //doldur
         }
     }
 }
-        
-        
+
+

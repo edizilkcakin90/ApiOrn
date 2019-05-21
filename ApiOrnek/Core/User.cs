@@ -4,7 +4,7 @@ using System.Text;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 
-namespace DAL
+namespace Core
 {
     public class User
     {
@@ -18,5 +18,6 @@ namespace DAL
         public string Email { get; set; }
         public string IdentityNo { get; set; }
         public char Sex { get; set; }
+        public string Password { get; set; }
     }
 }

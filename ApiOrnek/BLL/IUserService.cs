@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Core;
 using DAL;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,14 +9,9 @@ namespace BLL
 {
     public interface IUserService
     {
-        bool Add(User model);
-
-        bool Update(int id,User model);
-
-        bool Delete(int id);
-
-        List<User> GetAll();
-
-        User GetByID(int id);
+        bool RegisterUser(RegisterModel model);
+        void ChangePassword(ChangePasswordModel model);
+        bool ValidateCredentials(string email, string password);
+        void ForgotPassword(int id,string email);
     }
 }

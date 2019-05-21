@@ -6,8 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiOrnek", "ApiOrnek\ApiOrnek.csproj", "{4F11A0B1-6F03-4BD4-9B21-6F4BB721477B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DLL\DAL.csproj", "{C5534ABC-46A5-4DBD-B082-F7A30E086DE7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{293A820A-57C4-4021-8071-39CFC77CD277} = {293A820A-57C4-4021-8071-39CFC77CD277}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{9CCD4A70-2F9B-425D-8235-D2CD57A45B98}"
+	ProjectSection(ProjectDependencies) = postProject
+		{293A820A-57C4-4021-8071-39CFC77CD277} = {293A820A-57C4-4021-8071-39CFC77CD277}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{293A820A-57C4-4021-8071-39CFC77CD277}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +35,10 @@ Global
 		{9CCD4A70-2F9B-425D-8235-D2CD57A45B98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CCD4A70-2F9B-425D-8235-D2CD57A45B98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CCD4A70-2F9B-425D-8235-D2CD57A45B98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{293A820A-57C4-4021-8071-39CFC77CD277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{293A820A-57C4-4021-8071-39CFC77CD277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{293A820A-57C4-4021-8071-39CFC77CD277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{293A820A-57C4-4021-8071-39CFC77CD277}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
