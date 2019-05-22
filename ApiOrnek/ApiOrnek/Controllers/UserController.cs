@@ -30,52 +30,86 @@ namespace ApiOrnek.Controllers
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<User> Get(int id)
         {
-            var user = _userRepository.GetByID(id);
-            if (user == null)
+            try
+            {
+                var user = _userRepository.GetByID(id);
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+                return NotFound();
+            }
+            catch (Exception)
             {
                 return NotFound();
             }
-            return Ok(user);
+            
         }
 
         // POST: api/Data
         [HttpPost]
         public ActionResult<User> Post([FromBody] User model)
         {
-            if (_userRepository.Add(model) == true)
+            try
             {
-                return Ok(_userRepository.GetAll());
+                if (_userRepository.Add(model) == true)
+                {
+                    return Ok(_userRepository.GetAll());
+                }
+                return StatusCode(500);
             }
-            return StatusCode(500);
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+            
         }
 
         // PUT: api/Data/5
         [HttpPut("{id}")]
         public ActionResult<User> Put(int id, [FromBody] User model)
         {
-            _userRepository.Update(id, model);
-            return Ok(_userRepository.GetAll());
+            try
+            {
+                _userRepository.Update(id, model);
+                return Ok(_userRepository.GetAll());
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public ActionResult<User> Delete(int id)
         {
-            if (_userRepository.Delete(id))
+            try
             {
-                return Ok(_userRepository.GetAll());
+                if (_userRepository.Delete(id))
+                {
+                    return Ok(_userRepository.GetAll());
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
         public ActionResult<User> ForgotPassword(int id, string email)
         {
-            User forgotUser = _userRepository.GetByID(id);
-            if (forgotUser.Email == email)
+            try
             {
-                return Ok(forgotUser.Email);
+                _userService.ForgotPassword(id, email);
+                return Ok();
             }
-            return NotFound();
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         public ActionResult<User> RegisterUser(RegisterModel model)
@@ -94,12 +128,39 @@ namespace ApiOrnek.Controllers
 
         public ActionResult<User> ValidateCredentials(string email, string password)
         {
-            //doldur
+            try
+            {
+                var user = _userService.ValidateCredentials(email, password);
+                if (user)
+                {
+                    return Ok(user);
+                }
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
-        public void ChangePassword(ChangePasswordModel model)
+        public ActionResult<User> ChangePassword(int id,ChangePasswordModel model)
         {
-            //doldur
+            try
+            {
+                var changePass = _userService.ChangePassword(id, model);
+                if (changePass)
+                {
+                    return Ok(model);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
     }
 }

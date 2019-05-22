@@ -1,17 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BLL
 {
     public class UserService : IUserService
     {
         List<User> users = Datas.Users.userList;
-        public void ChangePassword(ChangePasswordModel model)
+        public bool ChangePassword(int id, ChangePasswordModel model)
         {
-            //doldur
+            var user = users.FirstOrDefault(x => (x.ID == id));
+            if (user != null)
+            {
+                user.Password = model.NewPassword;
+                return true;
+            }
+            else
+            {
+                user.Password = model.OldPassword;
+                return false;
+            }
         }
 
         public void ForgotPassword(int id,string email)
@@ -63,7 +75,12 @@ namespace BLL
 
         public bool ValidateCredentials(string email, string password)
         {
-            //doldur
+            var user = users.FirstOrDefault(x => x.Email == email && x.Password == password);
+            if (user != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
