@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Mail;
 using Core;
-using Microsoft.AspNetCore.Mvc;
+using DAL;
 
 namespace BLL
 {
     public class UserService : IUserService
     {
-        List<User> users = Datas.Users.userList;
+        InMemoryUserRepository userRepository;
+
+        public UserService()
+        {
+            userRepository = new InMemoryUserRepository();
+        }
         public bool ChangePassword(int id, ChangePasswordModel model)
         {
-            var user = users.FirstOrDefault(x => (x.ID == id));
+            var user = userRepository.GetAll().FirstOrDefault(x => (x.ID == id));
             if (user != null)
             {
                 user.Password = model.NewPassword;
@@ -29,7 +33,7 @@ namespace BLL
         public void ForgotPassword(int id,string email)
         {
             
-            var forgotUser = users.FirstOrDefault(x => x.Email == email);
+            var forgotUser = userRepository.GetAll().FirstOrDefault(x => x.Email == email);
             MailMessage message = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
             message.To.Add(forgotUser.Email.ToString());
@@ -50,19 +54,21 @@ namespace BLL
         {
             try
             {
-                var user = users.Where(x => x.ID == model.ID);
+                var user = userRepository.GetAll().FirstOrDefault(x => x.ID == model.ID);
                 if (user != model)
                 {
-                    var newUser = new User();
-                    newUser.ID = model.ID;
-                    newUser.Name = model.Name;
-                    newUser.LastName = model.LastName;
-                    newUser.Age = model.Age;
-                    newUser.Email = model.Email;
-                    newUser.IdentityNo = model.IdentityNo;
-                    newUser.Sex = model.Sex;
-                    newUser.Password = model.Password;
-                    users.Add(newUser);
+                    var newUser = new User
+                    {
+                        ID = model.ID,
+                        Name = model.Name,
+                        LastName = model.LastName,
+                        Age = model.Age,
+                        Email = model.Email,
+                        IdentityNo = model.IdentityNo,
+                        Sex = model.Sex,
+                        Password = model.Password
+                    };
+                    userRepository.GetAll().Add(newUser);
                     return true;
                 }
                 return false;
@@ -75,8 +81,8 @@ namespace BLL
 
         public bool ValidateCredentials(string email, string password)
         {
-            var user = users.FirstOrDefault(x => x.Email == email && x.Password == password);
-            if (user != null)
+            var user = userRepository.GetAll().Any(x => x.Email == email && x.Password == password);
+            if (user)
             {
                 return true;
             }
