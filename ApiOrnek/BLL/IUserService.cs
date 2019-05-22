@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Core;
+﻿using Core;
 using DAL;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BLL
 {

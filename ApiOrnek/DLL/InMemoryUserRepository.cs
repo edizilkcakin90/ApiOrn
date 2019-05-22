@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Core;
 
 namespace DAL
@@ -13,16 +12,17 @@ namespace DAL
         {
             try
             {
-                var user = users.Where(x => x.ID == model.ID);
-                var newUser = new User();
-                newUser.ID = model.ID;
-                newUser.Name = model.Name;
-                newUser.LastName = model.LastName;
-                newUser.Age = model.Age;
-                newUser.Email = model.Email;
-                newUser.IdentityNo = model.IdentityNo;
-                newUser.Sex = model.Sex;
-                newUser.Password = model.Password;
+                var newUser = new User
+                {
+                    ID = model.ID,
+                    Name = model.Name,
+                    LastName = model.LastName,
+                    Age = model.Age,
+                    Email = model.Email,
+                    IdentityNo = model.IdentityNo,
+                    Sex = model.Sex,
+                    Password = model.Password
+                };
                 users.Add(newUser);
                 return true;
             }
