@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Core.Context;
 
 namespace DAL
 {
-    public class InMemoryUserRepository : IUserRepository
+    public class EFRepository : IUserRepository
     {
-        private readonly List<User> users = Datas.Users.userList;
+        private readonly ProjectContext db;
+
+        public EFRepository()
+        {
+            db = new ProjectContext();
+        }
         public bool Add(User model)
         {
             try
@@ -23,7 +29,7 @@ namespace DAL
                     Sex = model.Sex,
                     Password = model.Password
                 };
-                users.Add(newUser);
+                db.Users.Add(newUser);
                 return true;
             }
             catch (Exception)
@@ -36,8 +42,8 @@ namespace DAL
         {
             try
             {
-                var user = users.FirstOrDefault(x => x.ID == id);
-                users.Remove(user);
+                var user = db.Users.FirstOrDefault(x => x.ID == id);
+                db.Users.Remove(user);
                 return true;
             }
             catch (Exception)
@@ -48,17 +54,17 @@ namespace DAL
 
         public IEnumerable<User> GetAll()
         {
-            return users;
+            return db.Users.ToList();
         }
 
         public User GetByID(int id)
         {
-            return users.FirstOrDefault(x => x.ID == id);
+            return db.Users.FirstOrDefault(x => x.ID == id);
         }
 
         public bool Update(int id, User model)
         {
-            var user = users.FirstOrDefault(x => (x.ID == id));
+            var user = db.Users.FirstOrDefault(x => (x.ID == id));
             if (user != null)
             {
                 user.ID = model.ID;
