@@ -11,11 +11,9 @@ namespace ApiOrnek.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         public UserController()
         {
-            _userRepository = new InMemoryUserRepository();
             _userService = new UserService();
         }
 
@@ -23,7 +21,7 @@ namespace ApiOrnek.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return _userRepository.GetAll();
+            return _userService.GetAll();
         }
 
         // GET: api/Data/5
@@ -32,7 +30,7 @@ namespace ApiOrnek.Controllers
         {
             try
             {
-                var user = _userRepository.GetByID(id);
+                var user = _userService.GetByID(id);
                 if (user != null)
                 {
                     return Ok(user);
@@ -52,9 +50,9 @@ namespace ApiOrnek.Controllers
         {
             try
             {
-                if (_userRepository.Add(model) == true)
+                if (_userService.Add(model) == true)
                 {
-                    return Ok(_userRepository.GetAll());
+                    return Ok(_userService.GetAll());
                 }
                 return StatusCode(500);
             }
@@ -71,8 +69,8 @@ namespace ApiOrnek.Controllers
         {
             try
             {
-                _userRepository.Update(id, model);
-                return Ok(_userRepository.GetAll());
+                _userService.Update(id, model);
+                return Ok(_userService.GetAll());
             }
             catch (Exception)
             {
@@ -87,9 +85,9 @@ namespace ApiOrnek.Controllers
         {
             try
             {
-                if (_userRepository.Delete(id))
+                if (_userService.Delete(id))
                 {
-                    return Ok(_userRepository.GetAll());
+                    return Ok(_userService.GetAll());
                 }
                 return NotFound();
             }
@@ -118,7 +116,7 @@ namespace ApiOrnek.Controllers
             {
                 User newUser = model;
                 _userService.RegisterUser(model);
-                return Ok(_userRepository.GetAll());
+                return Ok(_userService.GetAll());
             }
             catch (Exception)
             {

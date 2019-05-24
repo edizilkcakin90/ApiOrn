@@ -11,7 +11,7 @@ namespace DAL
 
         bool Delete(int id);
 
-        List<User> GetAll();
+        IEnumerable<User> GetAll();
 
         User GetByID(int id);
     }
