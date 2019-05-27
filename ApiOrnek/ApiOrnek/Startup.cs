@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Core;
 using Core.Context;
+using BLL;
 
 namespace ApiOrnek
 {
@@ -21,9 +22,8 @@ namespace ApiOrnek
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UserService>(opts => opts.UseSqlServer(Configuration["ConnectionString:ApiOrnekDB"]));
+            services.AddDbContext<ProjectContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:ApiOrnekDB"]));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

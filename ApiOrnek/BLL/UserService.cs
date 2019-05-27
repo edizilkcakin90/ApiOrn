@@ -11,11 +11,12 @@ namespace BLL
     public class UserService : IUserService
     {
         private readonly UserService _userService;
-        private readonly ProjectContext _projectContext;
+        private readonly ProjectContext db;
 
         public UserService()
         {
             _userService = new UserService();
+            db = new ProjectContext();
         }
 
         public bool Add(User model)
@@ -33,7 +34,8 @@ namespace BLL
                     Sex = model.Sex,
                     Password = model.Password
                 };
-                _projectContext.Users.Add(newUser);
+                db.Users.Add(newUser);
+                db.SaveChanges();
                 return true;
             }
             catch (Exception)
@@ -48,23 +50,32 @@ namespace BLL
             if (user != null)
             {
                 user.Password = model.NewPassword;
+                db.SaveChanges();
                 return true;
             }
             else
-            {
-                user.Password = model.OldPassword;
+            {                
                 return false;
             }
         }
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = db.Users.FirstOrDefault(x => x.ID == id);
+                db.Users.Remove(user);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public void ForgotPassword(int id,string email)
         {
-            
             var forgotUser = _userService.GetAll().FirstOrDefault(x => x.Email == email);
             MailMessage message = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
@@ -86,12 +97,12 @@ namespace BLL
 
         public IEnumerable<User> GetAll()
         {
-            return _projectContext.Users.ToList();
+            return db.Users.ToList();
         }
 
         public User GetByID(int id)
         {
-            return _projectContext.Users.FirstOrDefault(x => x.ID == id);
+            return db.Users.FirstOrDefault(x => x.ID == id);
         }
 
         public bool RegisterUser(RegisterModel model)
@@ -113,6 +124,7 @@ namespace BLL
                         Password = model.Password
                     };
                     _userService.Add(newUser);
+                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -125,7 +137,7 @@ namespace BLL
 
         public bool Update(int id, User model)
         {
-            var user = _projectContext.Users.FirstOrDefault(x => (x.ID == id));
+            var user = db.Users.FirstOrDefault(x => (x.ID == id));
             if (user != null)
             {
                 user.ID = model.ID;
@@ -135,6 +147,7 @@ namespace BLL
                 user.Email = model.Email;
                 user.IdentityNo = model.IdentityNo;
                 user.Sex = model.Sex;
+                db.SaveChanges();
                 return true;
             }
             else

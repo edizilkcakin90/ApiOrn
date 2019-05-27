@@ -30,6 +30,7 @@ namespace DAL
                     Password = model.Password
                 };
                 db.Users.Add(newUser);
+                db.SaveChanges();
                 return true;
             }
             catch (Exception)
@@ -44,6 +45,7 @@ namespace DAL
             {
                 var user = db.Users.FirstOrDefault(x => x.ID == id);
                 db.Users.Remove(user);
+                db.SaveChanges();
                 return true;
             }
             catch (Exception)
@@ -74,6 +76,7 @@ namespace DAL
                 user.Email = model.Email;
                 user.IdentityNo = model.IdentityNo;
                 user.Sex = model.Sex;
+                db.SaveChanges();
                 return true;
             }
             else
