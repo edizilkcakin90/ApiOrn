@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Core;
-using Core.Context;
-using BLL;
+using DAL.Context;
 
 namespace ApiOrnek
 {

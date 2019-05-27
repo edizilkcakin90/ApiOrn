@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using Core;
-using Core.Context;
+using DAL.Context;
 
 namespace DAL
 {
