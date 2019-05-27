@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Core;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Context
+namespace DAL.Context
 {
     public class ProjectContext : DbContext
     {
@@ -17,7 +18,7 @@ namespace Core.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\mssqllocaldb;Database=DbApiOrnek;Trusted_Connection=True"
+                "Server=localhost;Database=DbApiOrnek;Trusted_Connection=True"
                 );
         }
 

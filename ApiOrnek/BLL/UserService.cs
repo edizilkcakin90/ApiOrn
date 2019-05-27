@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using Core;
-using Core.Context;
-using DAL;
+using DAL.Context;
 
 namespace BLL
 {
     public class UserService : IUserService
     {
-        private readonly UserService _userService;
-        private readonly ProjectContext db;
+        private readonly IUserService _userService;
+        private readonly List<User> _users = Datas.Users.userList;
 
         public UserService()
         {
             _userService = new UserService();
-            db = new ProjectContext();
+            
+            
         }
 
         public bool Add(User model)
@@ -34,8 +34,7 @@ namespace BLL
                     Sex = model.Sex,
                     Password = model.Password
                 };
-                db.Users.Add(newUser);
-                db.SaveChanges();
+                _userService.Add(newUser);
                 return true;
             }
             catch (Exception)
@@ -49,8 +48,7 @@ namespace BLL
             var user = _userService.GetAll().FirstOrDefault(x => (x.ID == id));
             if (user != null)
             {
-                user.Password = model.NewPassword;
-                db.SaveChanges();
+                user.Password = model.NewPassword;                
                 return true;
             }
             else
@@ -63,9 +61,9 @@ namespace BLL
         {
             try
             {
-                var user = db.Users.FirstOrDefault(x => x.ID == id);
-                db.Users.Remove(user);
-                db.SaveChanges();
+                var user = _userService.GetByID(id);
+                _users.Remove(user);
+                
                 return true;
             }
             catch (Exception)
@@ -97,19 +95,19 @@ namespace BLL
 
         public IEnumerable<User> GetAll()
         {
-            return db.Users.ToList();
+            return _users;
         }
 
         public User GetByID(int id)
         {
-            return db.Users.FirstOrDefault(x => x.ID == id);
+            return _users.FirstOrDefault(x => x.ID == id);
         }
 
         public bool RegisterUser(RegisterModel model)
         {
             try
             {
-                var user = _userService.GetAll().FirstOrDefault(x => x.ID == model.ID);
+                var user = _users.FirstOrDefault(x => x.ID == model.ID);
                 if (user != model)
                 {
                     var newUser = new User
@@ -124,7 +122,6 @@ namespace BLL
                         Password = model.Password
                     };
                     _userService.Add(newUser);
-                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -137,7 +134,7 @@ namespace BLL
 
         public bool Update(int id, User model)
         {
-            var user = db.Users.FirstOrDefault(x => (x.ID == id));
+            var user = _users.FirstOrDefault(x => (x.ID == id));
             if (user != null)
             {
                 user.ID = model.ID;
@@ -147,7 +144,6 @@ namespace BLL
                 user.Email = model.Email;
                 user.IdentityNo = model.IdentityNo;
                 user.Sex = model.Sex;
-                db.SaveChanges();
                 return true;
             }
             else
