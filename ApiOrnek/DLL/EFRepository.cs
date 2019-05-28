@@ -30,11 +30,11 @@ namespace DAL
                     Sex = model.Sex,
                     Password = model.Password
                 };
-                db.Users.Add(newUser);
+                db.Set<User>().Add(newUser);
                 db.SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -60,7 +60,7 @@ namespace DAL
             try
             {
                 var user = db.Users.FirstOrDefault(x => x.ID == id);
-                db.Users.Remove(user);
+                db.Set<User>().Remove(user);
                 db.SaveChanges();
                 return true;
             }
@@ -93,12 +93,12 @@ namespace DAL
 
         public IEnumerable<User> GetAll()
         {
-            return db.Users.ToList();
+            return db.Set<User>().ToList();
         }
 
         public User GetByID(int id)
         {
-            return db.Users.FirstOrDefault(x => x.ID == id);
+            return db.Set<User>().FirstOrDefault(x => x.ID == id);
         }
 
         public bool RegisterUser(RegisterModel model)
@@ -119,7 +119,7 @@ namespace DAL
                         Sex = model.Sex,
                         Password = model.Password
                     };
-                    db.Users.Add(newUser);
+                    db.Set<User>().Add(newUser);
                     db.SaveChanges();
                     return true;
                 }
@@ -133,10 +133,10 @@ namespace DAL
 
         public bool Update(int id, User model)
         {
-            var user = db.Users.FirstOrDefault(x => (x.ID == id));
+            var user = db.Set<User>().FirstOrDefault(x => (x.ID == id));
             if (user != null)
             {
-                user.ID = model.ID;
+                user.ID = id;
                 user.Name = model.Name;
                 user.LastName = model.LastName;
                 user.Age = model.Age;
