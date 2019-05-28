@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Core;
 using BLL;
 using System;
+using DAL;
 
 namespace ApiOrnek.Controllers
 {
@@ -36,7 +37,7 @@ namespace ApiOrnek.Controllers
                 }
                 return NotFound();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return NotFound();
             }
@@ -55,7 +56,7 @@ namespace ApiOrnek.Controllers
                 }
                 return StatusCode(500);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -71,7 +72,7 @@ namespace ApiOrnek.Controllers
                 _userService.Update(id, model);
                 return Ok(_userService.GetAll());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return NotFound();
             }
@@ -90,7 +91,7 @@ namespace ApiOrnek.Controllers
                 }
                 return NotFound();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return NotFound();
             }
@@ -103,7 +104,7 @@ namespace ApiOrnek.Controllers
                 _userService.ForgotPassword(id, email);
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -117,7 +118,7 @@ namespace ApiOrnek.Controllers
                 _userService.RegisterUser(model);
                 return Ok(_userService.GetAll());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -134,7 +135,7 @@ namespace ApiOrnek.Controllers
                 }
                 return NotFound();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return NotFound();
             }
@@ -154,7 +155,7 @@ namespace ApiOrnek.Controllers
                     return StatusCode(500);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }

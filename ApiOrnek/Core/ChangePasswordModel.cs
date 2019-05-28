@@ -1,6 +1,6 @@
 ﻿namespace Core
 {
-    public class ChangePasswordModel
+    public class ChangePasswordModel:User
     {
         public string Email { get; set; }
         public string OldPassword { get; set; }
