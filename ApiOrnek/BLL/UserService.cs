@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using Core;
 using DAL;
-using DAL.Context;
 
 namespace BLL
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly ProjectContext db;
 
         public UserService()
         {
-            db = new ProjectContext();
             _userRepository = new EFRepository();
         }
 
@@ -26,7 +22,7 @@ namespace BLL
                 _userRepository.Add(model);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -52,7 +48,7 @@ namespace BLL
                 _userRepository.Delete(id);
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -84,7 +80,7 @@ namespace BLL
                 }
                 return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
