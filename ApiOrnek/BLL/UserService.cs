@@ -56,7 +56,7 @@ namespace BLL
             {
                 return false;
             }
-        }
+         }
 
         public void ForgotPassword(int id,string email)
         {
