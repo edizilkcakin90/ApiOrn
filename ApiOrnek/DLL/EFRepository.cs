@@ -105,19 +105,18 @@ namespace DAL
         {
             try
             {
-                var user = GetAll().FirstOrDefault(x => x.ID == model.ID);
+                var user = GetAll().FirstOrDefault(x => x.ID == model.regId);
                 if (user != model)
                 {
                     var newUser = new User
-                    {
-                        ID = model.ID,
-                        Name = model.Name,
-                        LastName = model.LastName,
-                        Age = model.Age,
-                        Email = model.Email,
-                        IdentityNo = model.IdentityNo,
-                        Sex = model.Sex,
-                        Password = model.Password
+                    { 
+                        Name = model.regName,
+                        LastName = model.regLastName,
+                        Age = model.regAge,
+                        Email = model.regEmail,
+                        IdentityNo = model.regIdentityNo,
+                        Sex = model.regSex,
+                        Password = model.regPassword
                     };
                     db.Set<User>().Add(newUser);
                     db.SaveChanges();

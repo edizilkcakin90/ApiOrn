@@ -4,17 +4,18 @@ namespace Core
 {
     public class RegisterModel : User
     {
+        public int regId { get; set; }
         [Required]
-        public string name { get; set; }
+        public string regName { get; set; }
         [Required]
-        public string lastName { get; set; }
-        public short age { get; set; }
+        public string regLastName { get; set; }
+        public short regAge { get; set; }
         [Required]
-        public string identityNo { get; set; }
+        public string regIdentityNo { get; set; }
         [Required]
-        public string eMail { get; set; }
-        public char  sex { get; set; }
+        public string regEmail { get; set; }
+        public char  regSex { get; set; }
         [Required]
-        public string password { get; set; }
+        public string regPassword { get; set; }
     }
 }
