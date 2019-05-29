@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Core;
 using BLL;
 using System;
-using DAL;
 
 namespace ApiOrnek.Controllers
 {
@@ -39,9 +38,9 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex);
             }
-            
+
         }
 
         // POST: api/Data
@@ -56,7 +55,7 @@ namespace ApiOrnek.Controllers
                 }
                 return StatusCode(500);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
@@ -74,7 +73,7 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex);
             }
             
         }
@@ -91,9 +90,9 @@ namespace ApiOrnek.Controllers
                 }
                 return NotFound();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(500);
             }
         }
 
@@ -104,7 +103,7 @@ namespace ApiOrnek.Controllers
                 _userService.ForgotPassword(id, email);
                 return Ok();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
@@ -118,7 +117,7 @@ namespace ApiOrnek.Controllers
                 _userService.RegisterUser(model);
                 return Ok(_userService.GetAll());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
@@ -137,7 +136,7 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex);
             }
         }
 
@@ -155,7 +154,7 @@ namespace ApiOrnek.Controllers
                     return StatusCode(500);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }

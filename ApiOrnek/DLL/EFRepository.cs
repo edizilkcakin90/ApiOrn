@@ -10,7 +10,6 @@ namespace DAL
     public class EFRepository : IUserRepository
     {
         private readonly ProjectContext db;
-
         public EFRepository()
         {
             db = new ProjectContext();
@@ -21,7 +20,6 @@ namespace DAL
             {
                 var newUser = new User
                 {
-                    ID = model.ID,
                     Name = model.Name,
                     LastName = model.LastName,
                     Age = model.Age,
@@ -73,22 +71,7 @@ namespace DAL
         public void ForgotPassword(int id, string email)
         {
             var forgotUser = GetAll().FirstOrDefault(x => x.Email == email);
-            MailMessage message = new MailMessage();
-            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            message.To.Add(forgotUser.Email.ToString());
-            message.Subject = "Password Recovery";
-            message.From = new System.Net.Mail.MailAddress("ediz.ilkcakin@gmail.com");
-            message.Body = "Your Password is :" + forgotUser.Password;
-            SmtpClient smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com"
-            };
-
-            SmtpServer.Port = 587;
-            SmtpServer.Credentials = new System.Net.NetworkCredential("username", "password");
-            SmtpServer.EnableSsl = true;
-
-            smtp.Send(message);
+            SendMail(forgotUser);
         }
 
         public IEnumerable<User> GetAll()
@@ -105,20 +88,10 @@ namespace DAL
         {
             try
             {
-                var user = GetAll().FirstOrDefault(x => x.ID == model.regId);
-                if (user != model)
+                var user = GetAll().Any(x => x.ID == model.regId);
+                if (user)
                 {
-                    var newUser = new User
-                    { 
-                        Name = model.regName,
-                        LastName = model.regLastName,
-                        Age = model.regAge,
-                        Email = model.regEmail,
-                        IdentityNo = model.regIdentityNo,
-                        Sex = model.regSex,
-                        Password = model.regPassword
-                    };
-                    db.Set<User>().Add(newUser);
+                    Add(model);
                     db.SaveChanges();
                     return true;
                 }
@@ -135,7 +108,6 @@ namespace DAL
             var user = db.Set<User>().FirstOrDefault(x => (x.ID == id));
             if (user != null)
             {
-                user.ID = id;
                 user.Name = model.Name;
                 user.LastName = model.LastName;
                 user.Age = model.Age;
@@ -159,6 +131,26 @@ namespace DAL
                 return true;
             }
             return false;
+        }
+
+        public void SendMail(User model)
+        {
+            MailMessage message = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+            message.To.Add(model.Email.ToString());
+            message.Subject = "Password Recovery";
+            message.From = new System.Net.Mail.MailAddress("ediz.ilkcakin@gmail.com");
+            message.Body = "Your Password is :" + model.Password;
+            SmtpClient smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com"
+            };
+
+            SmtpServer.Port = 587;
+            SmtpServer.Credentials = new System.Net.NetworkCredential("username", "password");
+            SmtpServer.EnableSsl = true;
+
+            smtp.Send(message);
         }
     }
 }
