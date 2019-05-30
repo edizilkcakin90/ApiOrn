@@ -34,7 +34,7 @@ namespace DAL
             }
             catch (Exception ex)
             {
-                return false;
+                return false; 
             }
         }
 
@@ -68,39 +68,19 @@ namespace DAL
             }
         }
 
-        public void ForgotPassword(int id, string email)
-        {
-            var forgotUser = GetAll().FirstOrDefault(x => x.Email == email);
-            SendMail(forgotUser);
-        }
-
         public IEnumerable<User> GetAll()
         {
             return db.Set<User>().ToList();
         }
 
+        public User GetByEmail(string email)
+        {
+            return db.Set<User>().FirstOrDefault(x => x.Email == email);
+        }
+
         public User GetByID(int id)
         {
             return db.Set<User>().FirstOrDefault(x => x.ID == id);
-        }
-
-        public bool RegisterUser(RegisterModel model)
-        {
-            try
-            {
-                var user = GetAll().Any(x => x.ID == model.regId);
-                if (user)
-                {
-                    Add(model);
-                    db.SaveChanges();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         public bool Update(int id, User model)
@@ -121,36 +101,6 @@ namespace DAL
             {
                 return false;
             }
-        }
-
-        public bool ValidateCredentials(string email, string password)
-        {
-            var user = GetAll().Any(x => x.Email == email && x.Password == password);
-            if (user)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public void SendMail(User model)
-        {
-            MailMessage message = new MailMessage();
-            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            message.To.Add(model.Email.ToString());
-            message.Subject = "Password Recovery";
-            message.From = new System.Net.Mail.MailAddress("ediz.ilkcakin@gmail.com");
-            message.Body = "Your Password is :" + model.Password;
-            SmtpClient smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com"
-            };
-
-            SmtpServer.Port = 587;
-            SmtpServer.Credentials = new System.Net.NetworkCredential("username", "password");
-            SmtpServer.EnableSsl = true;
-
-            smtp.Send(message);
         }
     }
 }
