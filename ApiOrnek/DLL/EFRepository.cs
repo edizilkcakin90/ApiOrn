@@ -40,14 +40,18 @@ namespace DAL
 
         public bool ChangePassword(int id, ChangePasswordModel model)
         {
-            var user = GetAll().FirstOrDefault(x => (x.ID == id));
-            if (user != null)
+            try
             {
-                user.Password = model.NewPassword;
-                db.SaveChanges();
-                return true;
+                var user = GetAll().FirstOrDefault(x => (x.ID == id));
+                if (user != null)
+                {
+                    user.Password = model.NewPassword;
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
             }
-            else
+            catch (Exception ex)
             {
                 return false;
             }
@@ -58,9 +62,13 @@ namespace DAL
             try
             {
                 var user = db.Users.FirstOrDefault(x => x.ID == id);
-                db.Set<User>().Remove(user);
-                db.SaveChanges();
-                return true;
+                if (user!=null)
+                {
+                    db.Set<User>().Remove(user);
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
             }
             catch (Exception)
             {
@@ -86,18 +94,22 @@ namespace DAL
         public bool Update(int id, User model)
         {
             var user = db.Set<User>().FirstOrDefault(x => (x.ID == id));
-            if (user != null)
+            try
             {
-                user.Name = model.Name;
-                user.LastName = model.LastName;
-                user.Age = model.Age;
-                user.Email = model.Email;
-                user.IdentityNo = model.IdentityNo;
-                user.Sex = model.Sex;
-                db.SaveChanges();
-                return true;
+                if (user != null)
+                {
+                    user.Name = model.Name;
+                    user.LastName = model.LastName;
+                    user.Age = model.Age;
+                    user.Email = model.Email;
+                    user.IdentityNo = model.IdentityNo;
+                    user.Sex = model.Sex;
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
             }
-            else
+            catch (Exception)
             {
                 return false;
             }
