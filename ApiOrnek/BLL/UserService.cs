@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using Core;
 using DAL;
 
@@ -15,22 +16,10 @@ namespace BLL
             _userRepository = new EFRepository();
         }
 
-        public bool Add(User model)
-        {
-            try
-            {
-                _userRepository.Add(model);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
         public bool ChangePassword(int id, ChangePasswordModel model)
         {
-            if (model != null)
+            var valid = ValidateCredentials(model.Email,model.Password);
+            if (valid)
             {
                 _userRepository.ChangePassword(id, model);
                 return true;
@@ -56,7 +45,8 @@ namespace BLL
 
         public void ForgotPassword(int id,string email)
         {
-            _userRepository.ForgotPassword(id, email);
+            User model = _userRepository.GetByID(id);
+            SendMail(model);
         }
 
         public IEnumerable<User> GetAll()
@@ -75,7 +65,7 @@ namespace BLL
             {
                 if (model != null)
                 {
-                    _userRepository.RegisterUser(model);
+                    _userRepository.Add(model);
                     return true;
                 }
                 return false;
@@ -104,10 +94,29 @@ namespace BLL
             var user = _userRepository.GetAll().Any(x => x.Email == email && x.Password == password);
             if (user)
             {
-                _userRepository.ValidateCredentials(email,password);
                 return true;
             }
             return false;
+        }
+
+        public void SendMail(User model)
+        {
+            MailMessage message = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+            message.To.Add(model.Email.ToString());
+            message.Subject = "Password Recovery";
+            message.From = new System.Net.Mail.MailAddress("ediz.ilkcakin@gmail.com");
+            message.Body = "Your Password is :" + model.Password;
+            SmtpClient smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com"
+            };
+
+            SmtpServer.Port = 587;
+            SmtpServer.Credentials = new System.Net.NetworkCredential("username", "password");
+            SmtpServer.EnableSsl = true;
+
+            smtp.Send(message);
         }
     }
 }

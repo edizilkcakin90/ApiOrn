@@ -45,11 +45,11 @@ namespace ApiOrnek.Controllers
 
         // POST: api/Data
         [HttpPost]
-        public ActionResult<User> Post([FromBody] User model)
+        public ActionResult<User> Post([FromBody] RegisterModel model)
         {
             try
             {
-                if (_userService.Add(model) == true)
+                if (_userService.RegisterUser(model) == true)
                 {
                     return Ok(_userService.GetAll());
                 }
