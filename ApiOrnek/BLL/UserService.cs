@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Core;
 using DAL;
 
@@ -16,12 +17,12 @@ namespace BLL
             _userRepository = new EFRepository();
         }
 
-        public bool ChangePassword(int id, ChangePasswordModel model)
+        public async Task<bool> ChangePassword(int id, ChangePasswordModel model)
         {
             var valid = ValidateCredentials(model.Email,model.Password);
             if (valid)
             {
-                _userRepository.ChangePassword(id, model);
+                await _userRepository.ChangePassword(id, model);
                 return true;
             }
             else
@@ -30,11 +31,11 @@ namespace BLL
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             try
             {
-                _userRepository.Delete(id);
+                await _userRepository.Delete(id);
                 return true;
             }
             catch (Exception ex)
@@ -59,13 +60,13 @@ namespace BLL
             return _userRepository.GetByID(id);
         }
 
-        public bool RegisterUser(RegisterModel model)
+        public async Task<bool> RegisterUser(RegisterModel model)
         {
             try
             {
                 if (model != null)
                 {
-                    _userRepository.Add(model);
+                    await _userRepository.Add(model);
                     return true;
                 }
                 return false;
@@ -76,11 +77,11 @@ namespace BLL
             }
         }
 
-        public bool Update(int id, User model)
+        public async Task<bool> Update(int id, User model)
         {
             if (model != null)
             {
-                _userRepository.Update(id, model);
+                await _userRepository.Update(id, model);
                 return true;
             }
             else

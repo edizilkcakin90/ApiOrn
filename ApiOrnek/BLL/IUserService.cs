@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core;
 
 namespace BLL
 {
     public interface IUserService
     {
-        bool RegisterUser(RegisterModel model);
-        bool ChangePassword(int id, ChangePasswordModel model);
+        Task<bool> RegisterUser(RegisterModel model);
+        Task<bool> ChangePassword(int id, ChangePasswordModel model);
         bool ValidateCredentials(string email, string password);
         void ForgotPassword(int id,string email);
 
-        bool Update(int id, User model);
+        Task<bool> Update(int id, User model);
 
-        bool Delete(int id);
+        Task<bool> Delete(int id);
 
         IEnumerable<User> GetAll();
 
