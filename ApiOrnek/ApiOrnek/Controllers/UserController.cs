@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Core;
 using BLL;
 using System;
+using System.Threading.Tasks;
 
 namespace ApiOrnek.Controllers
 {
@@ -45,11 +46,11 @@ namespace ApiOrnek.Controllers
 
         // POST: api/Data
         [HttpPost]
-        public ActionResult<User> Post([FromBody] RegisterModel model)
+        public async Task<ActionResult<User>> Post([FromBody] RegisterModel model)
         {
             try
             {
-                if (_userService.RegisterUser(model) == true)
+                if (await _userService.RegisterUser(model) == true)
                 {
                     return Ok(_userService.GetAll());
                 }
@@ -64,11 +65,11 @@ namespace ApiOrnek.Controllers
 
         // PUT: api/Data/5
         [HttpPut("{id}")]
-        public ActionResult<User> Put(int id, [FromBody] User model)
+        public async Task<ActionResult<User>> Put(int id, [FromBody] User model)
         {
             try
             {
-                _userService.Update(id, model);
+                await _userService.Update(id, model);
                 return Ok(_userService.GetAll());
             }
             catch (Exception ex)
@@ -80,11 +81,11 @@ namespace ApiOrnek.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult<User> Delete(int id)
+        public async Task<ActionResult<User>> Delete(int id)
         {
             try
             {
-                if (_userService.Delete(id))
+                if (await _userService.Delete(id))
                 {
                     return Ok(_userService.GetAll());
                 }
@@ -109,12 +110,12 @@ namespace ApiOrnek.Controllers
             }
         }
 
-        public ActionResult<User> RegisterUser(RegisterModel model)
+        public async Task<ActionResult<User>> RegisterUser(RegisterModel model)
         {
             try
             {
                 User newUser = model;
-                _userService.RegisterUser(model);
+                await _userService.RegisterUser(model);
                 return Ok(_userService.GetAll());
             }
             catch (Exception)
@@ -140,12 +141,11 @@ namespace ApiOrnek.Controllers
             }
         }
 
-        public ActionResult<User> ChangePassword(int id,ChangePasswordModel model)
+        public async Task<ActionResult<User>> ChangePassword(int id,ChangePasswordModel model)
         {
             try
             {
-                var changePass = _userService.ChangePassword(id, model);
-                if (changePass)
+                if (await _userService.ChangePassword(id, model))
                 {
                     return Ok(model);
                 }

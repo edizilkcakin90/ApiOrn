@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Core;
 using DAL.Context;
 
@@ -14,7 +15,7 @@ namespace DAL
         {
             db = new ProjectContext();
         }
-        public bool Add(User model)
+        public async Task<bool> Add(User model)
         {
             try
             {
@@ -29,7 +30,7 @@ namespace DAL
                     Password = model.Password
                 };
                 db.Set<User>().Add(newUser);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -38,7 +39,7 @@ namespace DAL
             }
         }
 
-        public bool ChangePassword(int id, ChangePasswordModel model)
+        public async Task<bool> ChangePassword(int id, ChangePasswordModel model)
         {
             try
             {
@@ -46,7 +47,7 @@ namespace DAL
                 if (user != null)
                 {
                     user.Password = model.NewPassword;
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return true;
                 }
                 return false;
@@ -57,7 +58,7 @@ namespace DAL
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             try
             {
@@ -65,7 +66,7 @@ namespace DAL
                 if (user!=null)
                 {
                     db.Set<User>().Remove(user);
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return true;
                 }
                 return false;
@@ -91,7 +92,7 @@ namespace DAL
             return db.Set<User>().FirstOrDefault(x => x.ID == id);
         }
 
-        public bool Update(int id, User model)
+        public async Task<bool> Update(int id, User model)
         {
             var user = db.Set<User>().FirstOrDefault(x => (x.ID == id));
             try
@@ -104,7 +105,7 @@ namespace DAL
                     user.Email = model.Email;
                     user.IdentityNo = model.IdentityNo;
                     user.Sex = model.Sex;
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return true;
                 }
                 return false;
