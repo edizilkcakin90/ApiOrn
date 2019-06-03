@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using DAL.Context;
 using BLL;
-using DAL;
 
 namespace ApiOrnek
 {
@@ -23,7 +22,6 @@ namespace ApiOrnek
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IUserRepository, EFRepository>();
             services.AddDbContext<ProjectContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:ApiOrnekDB"]));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
