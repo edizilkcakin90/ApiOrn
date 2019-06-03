@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using DAL.Context;
+using BLL;
+using DAL;
 
 namespace ApiOrnek
 {
@@ -20,6 +22,8 @@ namespace ApiOrnek
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserRepository, EFRepository>();
             services.AddDbContext<ProjectContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:ApiOrnekDB"]));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

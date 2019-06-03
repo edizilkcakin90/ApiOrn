@@ -12,9 +12,9 @@ namespace BLL
     {
         private readonly IUserRepository _userRepository;
 
-        public UserService()
+        public UserService(IUserRepository userRepository)
         {
-            _userRepository = new EFRepository();
+            _userRepository = userRepository;
         }
 
         public async Task<bool> ChangePassword(int id, ChangePasswordModel model)

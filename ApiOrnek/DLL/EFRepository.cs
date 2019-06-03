@@ -11,9 +11,9 @@ namespace DAL
     public class EFRepository : IUserRepository
     {
         private readonly ProjectContext db;
-        public EFRepository()
+        public EFRepository(ProjectContext _db)
         {
-            db = new ProjectContext();
+            db = _db;
         }
         public async Task<bool> Add(User model)
         {

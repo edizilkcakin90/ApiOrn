@@ -12,9 +12,9 @@ namespace ApiOrnek.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController()
+        public UserController(IUserService userService)
         {
-            _userService = new UserService();
+            _userService = userService;
         }
 
         // GET: api/Data
