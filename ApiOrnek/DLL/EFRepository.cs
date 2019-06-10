@@ -14,6 +14,7 @@ namespace DAL
         public EFRepository(ProjectContext _db)
         {
             db = _db;
+            
         }
         public async Task<bool> Add(User model)
         {
@@ -35,6 +36,7 @@ namespace DAL
             }
             catch (Exception ex)
             {
+                
                 return false; 
             }
         }
