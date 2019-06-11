@@ -7,11 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="Config\log4net.config" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="Config\log4net.config">
+	  <None Include="log4net.config">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
@@ -21,6 +17,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="2.2.11" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
 	</ItemGroup>

@@ -7,14 +7,16 @@ using Microsoft.EntityFrameworkCore;
 using DAL.Context;
 using BLL;
 using DAL;
+using Microsoft.Extensions.Logging;
 
 namespace ApiOrnek
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
+            loggerFactory.AddLog4Net();
         }
 
         public IConfiguration Configuration { get; }
@@ -33,6 +35,7 @@ namespace ApiOrnek
         {
             if (env.IsDevelopment())
             {
+                
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -41,6 +44,7 @@ namespace ApiOrnek
                 app.UseHsts();
             }
 
+            
             app.UseHttpsRedirection();
             app.UseMvc();
         }
