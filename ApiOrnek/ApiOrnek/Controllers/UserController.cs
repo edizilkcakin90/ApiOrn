@@ -21,10 +21,19 @@ namespace ApiOrnek.Controllers
 
         // GET: api/Data
         [HttpGet]
-        public IEnumerable<User> Get()
+        public ActionResult<IEnumerable<User>> Get()
         {
-            log.Info("All users called successfully");
-            return _userService.GetAll();
+            try
+            {
+                var users = _userService.GetAll();
+                log.Info("Users called successfully");
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                log.Error("Couldn't called all users", ex);
+                return NotFound(ex);
+            }
         }
 
         // GET: api/Data/5
@@ -36,7 +45,7 @@ namespace ApiOrnek.Controllers
                 var user = _userService.GetByID(id);
                 if (user != null)
                 {
-                    log.Info($"User called by id: success {id}");
+                    log.Info($"User called by id: {id}");
                     return Ok(user);
                 }
                 log.Error($"Couldn't find user with the {id}");
@@ -44,7 +53,7 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                log.Fatal("Error",ex); 
+                log.Fatal("Fatal Error",ex); 
                 return NotFound(ex);
             }
 
@@ -58,7 +67,6 @@ namespace ApiOrnek.Controllers
             {
                 if (await _userService.RegisterUser(model) == true)
                 {
-                    log.Info("Post action has done successfully");
                     return Ok(_userService.GetAll());
                 }
                 log.Error("Post action error");
@@ -66,7 +74,7 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                log.Fatal("Error",ex);
+                log.Fatal("Fatal Error",ex);
                 return StatusCode(500,ex);
             }
             
@@ -106,7 +114,7 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                log.Fatal("Error",ex);
+                log.Fatal("Fatal Error",ex);
                 return StatusCode(500,ex);
             }
         }
@@ -121,7 +129,7 @@ namespace ApiOrnek.Controllers
             } 
             catch (Exception ex)
             {
-                log.Fatal("Error", ex);
+                log.Fatal("Fatal Error", ex);
                 return StatusCode(500,ex);
             }
         }
@@ -157,7 +165,7 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                log.Fatal("Error", ex);
+                log.Fatal("Fatal Error", ex);
                 return StatusCode(500);
             }
         }
@@ -179,7 +187,7 @@ namespace ApiOrnek.Controllers
             }
             catch (Exception ex)
             {
-                log.Fatal("Error", ex);
+                log.Fatal("Fatal Error", ex);
                 return StatusCode(500);
             }
         }
