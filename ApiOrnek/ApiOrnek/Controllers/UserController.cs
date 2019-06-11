@@ -5,7 +5,6 @@ using BLL;
 using System;
 using System.Threading.Tasks;
 using log4net;
-using log4net.Config;
 
 namespace ApiOrnek.Controllers
 {
@@ -24,7 +23,7 @@ namespace ApiOrnek.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            log.Info("Success");
+            log.Info("All users called successfully");
             return _userService.GetAll();
         }
 
@@ -37,15 +36,15 @@ namespace ApiOrnek.Controllers
                 var user = _userService.GetByID(id);
                 if (user != null)
                 {
-                    log.Info("Success");
+                    log.Info($"User called by id: success {id}");
                     return Ok(user);
                 }
-                log.Info("Not Found");
+                log.Error($"Couldn't find user with the {id}");
                 return NotFound();
             }
             catch (Exception ex)
             {
-                log.Info("Not Found",ex);
+                log.Fatal("Error",ex); 
                 return NotFound(ex);
             }
 
@@ -59,10 +58,10 @@ namespace ApiOrnek.Controllers
             {
                 if (await _userService.RegisterUser(model) == true)
                 {
-                    log.Info("Success");
+                    log.Info("Post action has done successfully");
                     return Ok(_userService.GetAll());
                 }
-                log.Fatal("Error");
+                log.Error("Post action error");
                 return StatusCode(500);
             }
             catch (Exception ex)
@@ -80,12 +79,12 @@ namespace ApiOrnek.Controllers
             try
             {
                 await _userService.Update(id, model);
-                log.Info("Success");
+                log.Info($"User succesfully updated with the id number:{model.ID}");
                 return Ok(_userService.GetAll());
             }
             catch (Exception ex)
             {
-                log.Info("Not Found", ex);
+                log.Error($"Couldn't find user with the {id}", ex);
                 return NotFound(ex);
             }
             
@@ -99,10 +98,10 @@ namespace ApiOrnek.Controllers
             {
                 if (await _userService.Delete(id))
                 {
-                    log.Info("Success");
+                    log.Info($"User with the id number:{id} successfully deleted");
                     return Ok(_userService.GetAll());
                 }
-                log.Info("Not Found");
+                log.Error($"Couldn't find user with the {id}");
                 return NotFound();
             }
             catch (Exception ex)
@@ -117,7 +116,7 @@ namespace ApiOrnek.Controllers
             try
             {
                 _userService.ForgotPassword(id, email);
-                log.Info("Success");
+                log.Info($"Forgot Password mail has been sent to the user with the email :{email}");
                 return Ok();
             } 
             catch (Exception ex)
@@ -133,12 +132,12 @@ namespace ApiOrnek.Controllers
             {
                 User newUser = model;
                 await _userService.RegisterUser(model);
-                log.Info("Success");
+                log.Info("User successfully has been registered.");
                 return Ok(_userService.GetAll());
             }
             catch (Exception ex)
             {
-                log.Fatal("Error", ex);
+                log.Fatal("Couldnt register user.", ex);
                 return StatusCode(500);
             }
         }
@@ -150,15 +149,16 @@ namespace ApiOrnek.Controllers
                 var user = _userService.ValidateCredentials(email, password);
                 if (user)
                 {
-                    log.Info("Success");
+                    log.Info("User info matches with database.");
                     return Ok(user);
                 }
+                log.Error("User info didnt match with database.");
                 return NotFound();
             }
             catch (Exception ex)
             {
-                log.Info("Not Found", ex);
-                return NotFound(ex);
+                log.Fatal("Error", ex);
+                return StatusCode(500);
             }
         }
 
@@ -168,12 +168,12 @@ namespace ApiOrnek.Controllers
             {
                 if (await _userService.ChangePassword(id, model))
                 {
-                    log.Info("Success");
+                    log.Info("User's password successfully has changed");
                     return Ok(model);
                 }
                 else
                 {
-                    log.Fatal("Error");
+                    log.Error("Couldnt change user's password");
                     return StatusCode(500);
                 }
             }

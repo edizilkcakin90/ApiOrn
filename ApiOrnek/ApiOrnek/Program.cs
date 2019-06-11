@@ -8,8 +8,8 @@ namespace ApiOrnek
     {
         public static void Main(string[] args)
         {
+           
             CreateWebHostBuilder(args).Build().Run();
-
             Logger.Log("Logging has been started successfully!");
         }
 
