@@ -1,21 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Mail;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Core;
+using Core.Helpers;
 using DAL;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BLL
 {
     public class UserService : IUserService
     {
+        public interface IUserService
+        {
+            User Authenticate(string username, string password);
+            IEnumerable<User> GetAll();
+        }
+
         private readonly IUserRepository _userRepository;
 
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
+
+        private readonly AppSettings _appSettings;
+
+        public UserService(IOptions<AppSettings> appSettings)
+        {
+            _appSettings = appSettings.Value;
+        }
+
+        public User Authenticate(string username, string password)
+        {
+            var user = _userRepository.GetAll().SingleOrDefault(x => x.Email == username && x.Password == password);
+
+            // return null if user not found
+            if (user == null)
+                return null;
+
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.ID.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.Token = tokenHandler.WriteToken(token);
+
+            // remove password before returning
+            user.Password = null;
+
+            return user;
+        }
+
 
         public async Task<bool> ChangePassword(int id, ChangePasswordModel model)
         {
@@ -52,7 +101,11 @@ namespace BLL
 
         public IEnumerable<User> GetAll()
         {
-            return _userRepository.GetAll();
+            //return _userRepository.GetAll();
+            return _userRepository.GetAll().Select(x => {
+                x.Password = null;
+                return x;
+            });
         }
 
         public User GetByID(int id)

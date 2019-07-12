@@ -8,13 +8,14 @@ namespace ApiOrnek
     {
         public static void Main(string[] args)
         {
-           
-            CreateWebHostBuilder(args).Build().Run();
+            BuildWebHost(args).Run();
             Logger.Log("Logging has been started successfully!");
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseUrls("https://localhost:5000/")
+                .Build();
     }
 }
