@@ -6,6 +6,10 @@
 		<StartupObject>ApiOrnek.Program</StartupObject>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <WarningLevel>4</WarningLevel>
+	</PropertyGroup>
+
 	<ItemGroup>
 	  <None Include="log4net.config">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -25,5 +29,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\BLL\BLL.csproj" />
 	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
