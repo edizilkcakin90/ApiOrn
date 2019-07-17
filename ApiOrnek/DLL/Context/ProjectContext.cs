@@ -20,7 +20,7 @@ namespace DAL.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                "Server=MyOfis12;Database=DbApiOrnek;Trusted_Connection=True;User ID =sa;Password=123"
+                "Server=localhost;Database=DbApiOrnek;Trusted_Connection=True;"
                 );
         }
 
