@@ -34,7 +34,7 @@ namespace ApiOrnek
             services.AddTransient<IUserService, UserService>();
             services.AddDbContext<ProjectContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<ProjectContext>(opts => opts.UseSqlServer(("Server=(local);User ID=sa; Password=123;Database=ApiOrnekDB;Trusted_Connection=True;MultipleActiveResultSets=true")));
+            services.AddDbContext<ProjectContext>(opts => opts.UseSqlServer(("Server=localhost;Database=ApiOrnekDB;Trusted_Connection=True;MultipleActiveResultSets=true")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var key = Encoding.ASCII.GetBytes(Configuration["Application:Secret"]);
@@ -55,7 +55,7 @@ namespace ApiOrnek
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
-                    ValidateAudience = true
+                    ValidateAudience = false
                 };
                 x.Events = new JwtBearerEvents()
                 {

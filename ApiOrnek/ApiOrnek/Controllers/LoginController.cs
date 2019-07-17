@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace JWT.API.Controllers
 {
@@ -39,7 +40,7 @@ namespace JWT.API.Controllers
                 {
                     //Add any claim
                     new Claim(ClaimTypes.Name, credentials.Username),
-                    new Claim(ClaimTypes.HomePhone,"+90 536 616 55 77")
+                    new Claim(ClaimTypes.MobilePhone,"+90 536 616 55 77")
                 }),
 
                 //Expire token after some time
