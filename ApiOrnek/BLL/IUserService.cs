@@ -18,7 +18,5 @@ namespace BLL
         IEnumerable<User> GetAll();
 
         User GetByID(int id);
-
-        User Authenticate(string email, string password);
     }
 }

@@ -8,10 +8,10 @@ using DAL.Context;
 using BLL;
 using DAL;
 using Microsoft.Extensions.Logging;
-using Core.Helpers;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.Tasks;
 
 namespace ApiOrnek
 {
@@ -32,15 +32,12 @@ namespace ApiOrnek
 
             services.AddTransient<IUserRepository, EFRepository>();
             services.AddTransient<IUserService, UserService>();
-            services.AddDbContext<ProjectContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:ApiOrnekDB"]));
+            services.AddDbContext<ProjectContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ProjectContext>(opts => opts.UseSqlServer(("Server=(local);User ID=sa; Password=123;Database=ApiOrnekDB;Trusted_Connection=True;MultipleActiveResultSets=true")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
-            // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(Configuration["Application:Secret"]);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -48,14 +45,32 @@ namespace ApiOrnek
             })
             .AddJwtBearer(x =>
             {
+                x.Audience = "SomeCustomApp";
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
+                x.ClaimsIssuer = "mineplaJWT.api.demo";
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = true
+                };
+                x.Events = new JwtBearerEvents()
+                {
+                    OnTokenValidated = (context) =>
+                    {
+                        //context.Principal.Identity is ClaimsIdentity
+                        //So casting it to ClaimsIdentity provides all generated claims
+                        //And for an extra token validation they might be usefull
+                        var name = context.Principal.Identity.Name;
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            context.Fail("Unauthorized. Please re-login");
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
@@ -73,18 +88,10 @@ namespace ApiOrnek
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
-
+            
             app.UseAuthentication();
-
-
             app.UseHttpsRedirection();
             app.UseMvc();
         }
