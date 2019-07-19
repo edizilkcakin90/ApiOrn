@@ -22,7 +22,21 @@ namespace ApiOrnek.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate([FromBody]User userParam)
+        {
+            var user = _userService.Authenticate(userParam.Email, userParam.Password);
+
+            if (user == null)
+                return BadRequest(new { message = "Email or password is incorrect" });
+
+            return Ok(user);
+        }
+
         // GET: api/Data
+        [Authorize(Roles = Role.User)]
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public ActionResult<IEnumerable<User>> Get()
         {
@@ -40,19 +54,25 @@ namespace ApiOrnek.Controllers
         }
 
         // GET: api/Data/5
+        [Authorize(Roles = Role.Admin)]
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<User> Get(int id)
         {
             try
             {
                 var user = _userService.GetByID(id);
-                if (user != null)
+                if (user == null)
                 {
-                    log.Info($"User called by id: {id}");
-                    return Ok(user);
+                    log.Error($"Couldn't find user with the {id}");
+                    return NotFound();                    
                 }
-                log.Error($"Couldn't find user with the {id}");
-                return NotFound();
+                var currentUserId = int.Parse(User.Identity.Name);
+                if (id != currentUserId && !User.IsInRole(Role.Admin))
+                {
+                    return Forbid();
+                }
+                log.Info($"User called by id: {id}");
+                return Ok(user);
             }
             catch (Exception ex)
             {
@@ -63,6 +83,7 @@ namespace ApiOrnek.Controllers
         }
 
         // POST: api/Data
+        [Authorize(Roles = Role.Admin)]
         [HttpPost]
         public async Task<ActionResult<User>> Post([FromBody] RegisterModel model)
         {
