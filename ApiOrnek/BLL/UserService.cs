@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Core;
+using Core.Helpers;
 using DAL;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -15,17 +16,17 @@ namespace BLL
 {
     public class UserService : IUserService
     {
-        public interface IUserService
-        {
-            
-            IEnumerable<User> GetAll();
-        }
-
+        private readonly AppSettings _appSettings;
         private readonly IUserRepository _userRepository;
 
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+        }
+
+        public UserService(IOptions<AppSettings> appSettings)
+        {
+            _appSettings = appSettings.Value;
         }
 
 
@@ -134,6 +135,36 @@ namespace BLL
             SmtpServer.EnableSsl = true;
 
             smtp.Send(message);
+        }
+
+        public User Authenticate(string email, string password)
+        {
+            var user = _userRepository.GetAll().SingleOrDefault(x => x.Email == email && x.Password == password);
+
+            // return null if user not found
+            if (user == null)
+                return null;
+
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.ID.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.Token = tokenHandler.WriteToken(token);
+
+            // remove password before returning
+            user.Password = null;
+
+            return user;
         }
     }
 }

@@ -10,13 +10,10 @@ namespace BLL
         Task<bool> ChangePassword(int id, ChangePasswordModel model);
         bool ValidateCredentials(string email, string password);
         void ForgotPassword(int id,string email);
-
         Task<bool> Update(int id, User model);
-
         Task<bool> Delete(int id);
-
         IEnumerable<User> GetAll();
-
         User GetByID(int id);
+        User Authenticate(string email, string password);
     }
 }
