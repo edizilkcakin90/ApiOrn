@@ -38,9 +38,13 @@ namespace DAL.Migrations
 
                     b.Property<string>("Password");
 
+                    b.Property<string>("Role");
+
                     b.Property<string>("Sex")
                         .IsRequired()
                         .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
+
+                    b.Property<string>("Token");
 
                     b.HasKey("ID");
 
@@ -56,6 +60,7 @@ namespace DAL.Migrations
                             LastName = "Ilkcakin",
                             Name = "Ediz",
                             Password = "123456",
+                            Role = "Admin",
                             Sex = "m"
                         },
                         new
@@ -67,6 +72,7 @@ namespace DAL.Migrations
                             LastName = "Uygur",
                             Name = "Onur",
                             Password = "1234567",
+                            Role = "User",
                             Sex = "m"
                         },
                         new
@@ -78,6 +84,7 @@ namespace DAL.Migrations
                             LastName = "Asd",
                             Name = "Ahmet",
                             Password = "12345678",
+                            Role = "User",
                             Sex = "m"
                         },
                         new
@@ -89,6 +96,7 @@ namespace DAL.Migrations
                             LastName = "Dsa",
                             Name = "Mehmet",
                             Password = "123456789",
+                            Role = "User",
                             Sex = "m"
                         });
                 });

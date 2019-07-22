@@ -19,16 +19,11 @@ namespace BLL
         private readonly AppSettings _appSettings;
         private readonly IUserRepository _userRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IOptions<AppSettings> appSettings)
         {
             _userRepository = userRepository;
-        }
-
-        public UserService(IOptions<AppSettings> appSettings)
-        {
             _appSettings = appSettings.Value;
         }
-
 
         public async Task<bool> ChangePassword(int id, ChangePasswordModel model)
         {

@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DAL.Context;
+using System.Linq;
 
 namespace JWT.API.Controllers
 {
@@ -17,48 +19,55 @@ namespace JWT.API.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _config;
-        public LoginController(IConfiguration config)
+        private readonly ProjectContext _db;
+        public LoginController(IConfiguration config,ProjectContext db)
         {
             _config = config;
+            _db = db;
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Post([FromBody] LoginDTO credentials)
+        public IActionResult Post([FromBody] LoginDTO credentials,string Username,string Password)
         {
-
+            var checkEmail =_db.Set<User>().FirstOrDefault(x => x.Email == credentials.Username);
+            var checkPassword =_db.Set<User>().FirstOrDefault(x => x.Password == credentials.Password);
             //TODO: Check credentials from some user management system
 
-            //So we checked, and let's create a valid token with some Claim
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config["Application:Secret"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            if (checkEmail.Email == credentials.Username && checkPassword.Password == credentials.Password)
             {
-                Audience = "SomeCustomApp",
-                Issuer = "mineplaJWT.api.demo",
-                Subject = new ClaimsIdentity(new Claim[]
+                //So we checked, and let's create a valid token with some Claim
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_config["Application:Secret"]);
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Audience = "SomeCustomApp",
+                    Issuer = "mineplaJWT.api.demo",
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     //Add any claim
                     new Claim(ClaimTypes.Name, credentials.Username),
-                    new Claim(ClaimTypes.MobilePhone,"+90 536 616 55 77")
-                }),
+                    new Claim(ClaimTypes.Role, Role.User)
+                    }),
 
-                //Expire token after some time
-                Expires = DateTime.UtcNow.AddDays(7),
+                    //Expire token after some time
+                    Expires = DateTime.UtcNow.AddDays(7),
 
-                //Let's also sign token credentials for a security aspect, this is important!!!
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+                    //Let's also sign token credentials for a security aspect, this is important!!!
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
 
-            //So see token info also please check token
-            // return Ok(new { TokenInfo = token });
+                //So see token info also please check token
+                // return Ok(new { TokenInfo = token });
 
-            //Return token in some way
-            //to the clients so that they can use it
-            //return it with header would be nice
-            return Ok(new { Token = tokenString });
+                //Return token in some way
+                //to the clients so that they can use it
+                //return it with header would be nice
+                return Ok(new { Token = tokenString });
+            }
+            return NotFound();            
         }
     }
 }
