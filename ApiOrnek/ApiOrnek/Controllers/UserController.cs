@@ -34,9 +34,8 @@ namespace ApiOrnek.Controllers
             return Ok(user);
         }
 
-        // GET: api/Data
-        [Authorize(Roles = Role.User)]
-        [Authorize(Roles = Role.Admin)]
+        // GET: api/Data        
+        [Authorize(Roles = Role.Admin + ","+Role.User)]
         [HttpGet]
         public ActionResult<IEnumerable<User>> Get()
         {
