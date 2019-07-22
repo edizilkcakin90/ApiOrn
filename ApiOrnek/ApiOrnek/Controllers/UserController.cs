@@ -64,12 +64,7 @@ namespace ApiOrnek.Controllers
                 {
                     log.Error($"Couldn't find user with the {id}");
                     return NotFound();                    
-                }
-                var currentUserId = int.Parse(User.Identity.Name);
-                if (id != currentUserId && !User.IsInRole(Role.Admin))
-                {
-                    return Forbid();
-                }
+                }               
                 log.Info($"User called by id: {id}");
                 return Ok(user);
             }

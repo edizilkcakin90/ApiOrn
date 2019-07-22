@@ -41,13 +41,13 @@ namespace JWT.API.Controllers
                 var key = Encoding.ASCII.GetBytes(_config["Application:Secret"]);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Audience = "SomeCustomApp",
-                    Issuer = "mineplaJWT.api.demo",
+                    Audience = "Local",
+                    Issuer = "Edizilkcakin",
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                     //Add any claim
                     new Claim(ClaimTypes.Name, credentials.Username),
-                    new Claim(ClaimTypes.Role, Role.User)
+                    new Claim(ClaimTypes.Role, checkEmail.Role)
                     }),
 
                     //Expire token after some time
